@@ -20,3 +20,7 @@
 **2.** Type ``` pip install flexikit ``` into the terminal and press enter.
 
 **3.** Let FlexiKit install on your system and when done use FlexiKit to its limits!
+
+## Code-Examples
+
+***Click for examples*** -> https://github.com/Roms-lab/FlexiKit/tree/main/Extras
