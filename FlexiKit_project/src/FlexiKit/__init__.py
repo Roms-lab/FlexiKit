@@ -10,5 +10,6 @@ __author__ = "Zachary Sherwood"
 
 # The `__all__` list is good practice for controlling wildcard imports.
 # In this case, you probably want to expose all your main classes.
-__all__ = ["math", "time", "DLL", "UI", Memory]
+__all__ = ["math", "time", "DLL", "UI", "Memory"]
+
 
