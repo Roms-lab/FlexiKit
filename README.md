@@ -15,7 +15,7 @@
 
 **Make sure you have python 3.0 Minimum installed.**
 
-**1.** Open Termina
+**1.** Open Your Terminal Of Choice
 
 **2.** Type ``` pip install flexikit ``` into the terminal and press enter.
 
