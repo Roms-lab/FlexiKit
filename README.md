@@ -23,4 +23,4 @@
 
 ## Code-Examples
 
-***Click for examples*** -> https://github.com/Roms-lab/FlexiKit/tree/main/Extras
+***Click for examples*** ->[Code Examples](Extras).
