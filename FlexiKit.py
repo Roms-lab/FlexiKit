@@ -303,3 +303,89 @@ class UI:
     def AskString(self, title, prompt):
         """Asks the user for a string and returns it."""
         return simpledialog.askstring(title, prompt)
+import ctypes
+import os
+
+class Memory:
+    """
+    A Python wrapper class for interacting with Memorydll.dll.
+    Provides easy-to-use methods for reading and writing memory.
+    """
+
+    def __init__(self, dll_name="Memorydll.dll"):
+        """
+        Initializes the Memory class and loads the DLL.
+        
+        Args:
+            dll_name (str): The name of the DLL file.
+        """
+        dll_path = os.path.join(os.path.dirname(__file__), dll_name)
+
+        if not os.path.exists(dll_path):
+            raise FileNotFoundError(f"DLL file not found at: {dll_path}")
+
+        try:
+            self._memory_dll = ctypes.cdll.LoadLibrary(dll_path)
+            self._setup_function_signatures()
+        except OSError as e:
+            raise RuntimeError(f"Error loading DLL: {e}")
+
+    def _setup_function_signatures(self):
+        """
+        Defines the function prototypes for the C++ DLL functions.
+        """
+        # ReadMemory(void* address, void* buffer, size_t size)
+        self._memory_dll.read_memory.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_size_t]
+        
+        # WriteMemory(void* address, const void* data, size_t size)
+        self._memory_dll.write_memory.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_size_t]
+
+    def read_memory(self, address: int, size: int) -> bytes:
+        """
+        Reads a specified number of bytes from a memory address.
+
+        Args:
+            address (int): The memory address to read from.
+            size (int): The number of bytes to read.
+
+        Returns:
+            bytes: The raw data read from memory.
+        """
+        buffer = ctypes.create_string_buffer(size)
+        self._memory_dll.read_memory(ctypes.c_void_p(address), ctypes.byref(buffer), size)
+        return buffer.raw
+
+    def write_memory(self, address: int, data: bytes):
+        """
+        Writes a block of bytes to a specified memory address.
+
+        Args:
+            address (int): The memory address to write to.
+            data (bytes): The data to write.
+        """
+        if not isinstance(data, bytes):
+            raise TypeError("Data must be a bytes object.")
+        
+        buffer = ctypes.create_string_buffer(data, len(data))
+        self._memory_dll.write_memory(ctypes.c_void_p(address), ctypes.byref(buffer), len(data))
+
+    # --- Convenience methods for common data types ---
+
+    def read_int(self, address: int) -> int:
+        """Reads a 4-byte signed integer from a memory address."""
+        data = self.read_memory(address, ctypes.sizeof(ctypes.c_int))
+        return int.from_bytes(data, 'little', signed=True)
+    
+    def write_int(self, address: int, value: int):
+        """Writes a 4-byte signed integer to a memory address."""
+        data = value.to_bytes(ctypes.sizeof(ctypes.c_int), 'little', signed=True)
+        self.write_memory(address, data)
+
+    def read_float(self, address: int) -> float:
+        """Reads a 4-byte float from a memory address."""
+        data = self.read_memory(address, ctypes.sizeof(ctypes.c_float))
+        return ctypes.c_float.from_buffer_copy(data).value
+
+    def write_float(self, address: int, value: float):
+        """Writes a 4-byte float to a memory address."""
+        self.write_memory(address, ctypes.c_float(value))
