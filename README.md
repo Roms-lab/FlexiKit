@@ -9,11 +9,13 @@
 
  * **3.** **Less Error-Prone** FlexiKit does all the headaches for you. No need to re-invent the wheel with some library that makes **YOU** do all the work. When using the UI import with FlexiKit, why write 30 lines to have a error prone GUI? With FlexiKit write a GUI screen in 5 lines and have ZERO errors!
 
+ * **4.** **Low Level Written In C++** All FlexiKit dll's are written in raw C++ and compiled to dll format for maximum preformance and ease of use in python functions.
+
 ## Installation
 
 **Make sure you have python 3.0 Minimum installed.**
 
-**1.** Open Terminal
+**1.** Open Termina
 
 **2.** Type ``` pip install flexikit ``` into the terminal and press enter.
 
