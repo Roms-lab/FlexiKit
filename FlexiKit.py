@@ -458,3 +458,49 @@ if __name__ == '__main__':
         print(f"An error occurred: {e}")
     finally:
         print("\nExample finished.")
+        
+class Py2D:
+    import pygame as game
+
+    # Wrapper Function For Pygame Window
+    @staticmethod
+    def CreateWindow(width, height, title="Py2D Window"):
+        Py2D.game.init()
+        window = Py2D.game.display.set_mode((width, height))
+        Py2D.game.display.set_caption(title)
+        return window
+    
+    # Fills Screen
+    @staticmethod
+    def Fill(surface, r, g, b):
+        surface.fill((r, g, b))
+
+    @staticmethod
+    def HandleRunTime(update_callback=None, draw_callback=None, event_callback=None):
+        running = True
+
+        while running:
+            for event in Py2D.game.event.get():
+                if event.type == Py2D.game.QUIT:
+                    running = False
+
+                if event_callback:
+                    event_callback(event)
+
+            if update_callback:
+                update_callback()
+
+            if draw_callback:
+                draw_callback()
+
+            Py2D.game.display.update()
+
+    # Handles Circle Drawing
+    @staticmethod
+    def DrawCircle(screen, color, x, y, radius):
+        Py2D.game.draw.circle(screen, color, (x, y), radius)
+
+    # Handles Rect Drawing
+    @staticmethod
+    def DrawRect(screen, color, x, y, width, height):
+        Py2D.game.draw.rect(screen, color, (x, y, width, height))
