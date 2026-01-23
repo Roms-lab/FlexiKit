@@ -7,6 +7,7 @@ def main():
     """
     # Instantiate the Memory class outside the loop to keep the handle open.
     mem = Memory()
+    os.system("cls")
     
     print("Memory Terminal Application")
     print("----------------------------")
