@@ -21,6 +21,10 @@
 
 **3.** Let FlexiKit install on your system and when done use FlexiKit to its limits!
 
+### Portable Option
+
+**For users who do not want to install FlexiKIt. You can simply download FlexiKit.py and all dll's. Then put FlexiKit.py & Lib dll's into same folder, import flexikit, and use it as you installed it!**
+
 ## Code-Examples
 
 ***Click for examples*** ->[Code Examples](Extras).
