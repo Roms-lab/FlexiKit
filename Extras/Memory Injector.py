@@ -1,4 +1,4 @@
-from FlexiKit import Memory
+from FlexiKit_Portable.FlexiKit import Memory
 import os
 
 def main():
