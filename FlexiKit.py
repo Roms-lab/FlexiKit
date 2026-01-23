@@ -504,3 +504,91 @@ class Py2D:
     @staticmethod
     def DrawRect(screen, color, x, y, width, height):
         Py2D.game.draw.rect(screen, color, (x, y, width, height))
+class WinAPI:
+    import win32api as _api
+    from win32con import (
+        MB_OK, MB_OKCANCEL, MB_YESNO, 
+        MB_ICONINFORMATION, MB_ICONWARNING, MB_ICONERROR, MB_ICONQUESTION,
+        IDYES, IDNO, IDOK, IDCANCEL
+    )
+
+    @staticmethod
+    def Commands():
+        print("--- WinAPI Commands ---")
+        print("MessageBox(Message, Window_Title, id)")
+        print("Beep(frequency=int, duration=int)")
+        print("TypeKey(key_code) -> Hex value for key (e.g. 0x41 for 'A')")
+        print("Cmd(Command)")
+        print("Powershell(Command)")
+        print("Flash(title, count)")
+        print("SetTransparency(title, 0-255)")
+        print("LockPC() -> Win + L")
+        print("ToggleMute()")
+
+    @staticmethod
+    def MessageBox(Message, Window_Title, id):
+        return WinAPI._api.MessageBox(0, Message, Window_Title, id)
+    
+    @staticmethod
+    def Beep(frequency=440, duration=500):
+        import win32api
+        return win32api.Beep(frequency, duration)
+    
+    @staticmethod
+    def TypeKey(key_code):
+        import win32api
+        import win32con
+        win32api.keybd_event(key_code, 0, 0, 0)
+        win32api.keybd_event(key_code, 0, win32con.KEYEVENTF_KEYUP, 0)
+
+    @staticmethod
+    def Cmd(Command):
+        import os
+        os.system(Command)
+
+    @staticmethod
+    def Powershell(Command):
+        import os
+        os.system(f'powershell -command "{Command}"')
+
+    @staticmethod
+    def LockPC():
+        import ctypes
+        ctypes.windll.user32.LockWorkStation()
+
+    @staticmethod
+    def Flash(window_title, count=5):
+        import win32gui
+        hwnd = win32gui.FindWindow(None, window_title)
+        if hwnd:
+            # 1 = FLASHW_CAPTION, 2 = FLASHW_TRAY, 3 = BOTH
+            import ctypes
+            from ctypes import wintypes
+            class FLASHWINFO(ctypes.Structure):
+                _fields_ = [("cbSize", wintypes.UINT), ("hwnd", wintypes.HWND),
+                            ("dwFlags", wintypes.DWORD), ("uCount", wintypes.UINT),
+                            ("dwTimeout", wintypes.DWORD)]
+            info = FLASHWINFO(ctypes.sizeof(FLASHWINFO), hwnd, 3, count, 0)
+            ctypes.windll.user32.FlashWindowEx(ctypes.byref(info))
+    
+    @staticmethod
+    def SetTransparency(window_title, level):
+        """level: 0 (invisible) to 255 (opaque)"""
+        import win32gui
+        import win32con
+        hwnd = win32gui.FindWindow(None, window_title)
+        if hwnd:
+            # Add the 'Layered' attribute to the window
+            style = win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
+            win32gui.SetWindowLong(hwnd, win32con.GWL_EXSTYLE, style | win32con.WS_EX_LAYERED)
+            # Set transparency level
+            import ctypes
+            ctypes.windll.user32.SetLayeredWindowAttributes(hwnd, 0, level, 2)
+
+    @staticmethod
+    def ToggleMute():
+        import win32api
+        import win32con
+        # VK_VOLUME_MUTE = 0xAD
+        win32api.keybd_event(0xAD, 0, 0, 0)
+        win32api.keybd_event(0xAD, 0, win32con.KEYEVENTF_KEYUP, 0)
